@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('uploads', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
+            $table->string('original_filename');
             $table->enum('status', ['pending', 'processing', 'completed', 'failed'])->default('pending');
             $table->text('error_message')->nullable();
             $table->timestamps();

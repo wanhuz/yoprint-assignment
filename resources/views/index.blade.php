@@ -36,7 +36,7 @@
                                     <div>{{ $upload->created_at->format('n-j-Y g:ia') }}</div>
                                     <div class="time-info">({{ $upload->created_at->diffForHumans() }})</div>
                                 </td>
-                                <td>{{ $upload->filename }}</td>
+                                <td>{{ $upload->original_filename }}</td>
                                 <td class="status-{{ strtolower($upload->status) }}">
                                     {{ $upload->status }}
                                 </td>
@@ -101,7 +101,7 @@
                                     <div>${formatDate(date)}</div>
                                     <div class="time-info">(${getTimeAgo(date)})</div>
                                 </td>
-                                <td>${u.filename}</td>
+                                <td>${u.original_filename}</td>
                                 <td class="${statusClass}">${u.status}</td>
                             </tr>
                         `;

@@ -12,6 +12,7 @@ class Upload extends Model
 
     protected $fillable = [
         'filename',
+        'original_filename',
         'status',
         'error_message',
     ];
@@ -20,4 +21,5 @@ class Upload extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'upload_id');
-    }}
+    }
+}

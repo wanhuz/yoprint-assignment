@@ -23,6 +23,7 @@ class UploadController extends Controller
 
         $upload = Upload::create([
             'filename' => $path,
+            'original_filename' => $file->getClientOriginalName(),
             'status' => 'pending',
         ]);
 
