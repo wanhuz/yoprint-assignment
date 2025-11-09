@@ -1,59 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# YoPrint Laravel CSV Upload Assignment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a mini Laravel project for the YoPrint coding assignment.  
+It allows users to upload CSV files containing product data, processes them in the background, and displays the upload history with real-time status updates.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Upload CSV files via a simple web interface
+- Background processing of CSV using **Laravel Horizon**
+- Idempotent and upsert behavior: same CSV can be uploaded multiple times without creating duplicate products
+- Real-time status updates of uploads (polling every few seconds)
+- History of all previous uploads with status (`pending`, `processing`, `completed`, `failed`)
+- UTF-8 cleanup for CSV contents
+- Optional: Can track errors if file processing fails
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## CSV Format
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Field | Required |
+|-------|----------|
+| UNIQUE_KEY | Yes (used for upsert) |
+| PRODUCT_TITLE | Yes |
+| PRODUCT_DESCRIPTION | No |
+| STYLE# | No |
+| SANMAR_MAINFRAME_COLOR | No |
+| SIZE | No |
+| COLOR_NAME | No |
+| PIECE_PRICE | No |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend:** Laravel 10
+- **Database:** SQLite (default, easy to set up)
+- **Queue / Background Jobs:** Redis + Laravel Horizon
+- **Frontend:** Blade templates + Axios for real-time updates
+- **CSV Handling:** PHP built-in `fgetcsv()`
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Installation
 
-## Contributing
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd yoprint-test
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. Install dependencies:
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. Create environment file:
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Create SQLite database file:
 
-## License
+```bash
+touch /absolute/path/to/db.sqlite
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. Configure .env for SQLite:
+
+```bash
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/db.sqlite
+QUEUE_CONNECTION=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+6. Run migrations:
+
+```bash
+php artisan migrate
+```
+
+7. Start Redis server (if not running):
+```bash
+sudo service redis-server start
+```
+
+8. Start Horizon in a separate terminal:
+
+```bash
+php artisan horizon
+```
+
+9. Start the Laravel server:
+```bash
+php artisan serve
+```
+
+## Usage
+
+1. Visit the app in your browser: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+2. Upload a CSV file via the form.
+3. View the list of uploads and their status:
+   - `pending` → waiting to be processed
+   - `processing` → currently being processed
+   - `completed` → finished successfully
+   - `failed` → encountered an error
+4. The table refreshes automatically every 3 seconds to show real-time status.
+
+## Project Structure
+
+- `app/Models/Upload.php` → tracks uploaded CSV files
+- `app/Models/Product.php` → stores products and handles upserts
+- `app/Jobs/ProcessCsvJob.php` → background job for CSV processing
+- `resources/views/index.blade.php` → UI for file upload and status
