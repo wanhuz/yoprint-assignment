@@ -19,8 +19,6 @@ class ProcessCsvJob implements ShouldQueue
     public function __construct($uploadId)
     {
         $this->uploadId = $uploadId;
-
-        return "yes";
     }
 
     /**
