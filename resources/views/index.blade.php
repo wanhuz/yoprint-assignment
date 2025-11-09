@@ -18,6 +18,17 @@
                         Upload File
                     </button>
                 </div>
+
+                    @if ($errors->any())
+                        <div class="alert alert-error">
+                            <strong>Error{{ count($errors) > 1 ? 's' : '' }}:</strong>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
             </form>
 
             <div class="table-container">

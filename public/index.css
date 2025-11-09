@@ -148,3 +148,29 @@ tr:hover {
     font-size: 13px;
     margin-top: 3px;
 }
+
+.alert {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-family: sans-serif;
+}
+
+/* Error box */
+.alert-error {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4d;
+    color: #b30000;
+}
+
+/* Success box */
+.alert-success {
+    background-color: #e6ffea;
+    border: 1px solid #33cc66;
+    color: #006622;
+}
+
+.alert ul {
+    margin: 5px 0 0 20px;
+    padding: 0;
+}

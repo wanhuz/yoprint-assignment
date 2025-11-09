@@ -16,7 +16,7 @@ class UploadController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['file' => 'required|mimes:csv,txt']);
+        $request->validate(['file' => 'required|mimes:csv']);
 
         $file = $request->file('file');
         $path = $file->store('uploads');
