@@ -1,3 +1,6 @@
+
+![YoPrint UI Screenshot](https://raw.githubusercontent.com/wanhuz/yoprint-assignment/refs/heads/main/public/yoprint.PNG)
+
 # YoPrint Laravel CSV Upload Assignment
 
 This is a mini Laravel project for the YoPrint coding assignment.  
