@@ -1,5 +1,5 @@
 
-![YoPrint UI Screenshot](https://raw.githubusercontent.com/wanhuz/yoprint-assignment/refs/heads/main/public/yoprint.PNG)
+![YoPrint UI Screenshot](https://raw.githubusercontent.com/wanhuz/yoprint-assignment/refs/heads/main/public/yoprint_2.PNG)
 
 # YoPrint Laravel CSV Upload Assignment
 
