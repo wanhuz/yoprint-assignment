@@ -11,7 +11,8 @@ class UploadController extends Controller
     public function index()
     {
         $uploads = Upload::latest()->get();
-        return view('index', compact('uploads'));
+
+        return view('uploads.index', compact('uploads'));
     }
 
     public function store(Request $request)

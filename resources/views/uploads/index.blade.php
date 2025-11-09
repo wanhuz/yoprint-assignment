@@ -1,64 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>YoPrint CSV Uploader</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="{{ asset('axios.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('index.css') }}">
-</head>
-<body>
-    <div class="container">
-        <div class="content">
-            <form action="{{ route('uploads.store') }}" method="POST" enctype="multipart/form-data" id="upload-form">
-                @csrf
-                <div class="upload-area" id="upload-area">
-                    <span class="upload-text">Select file/Drag and drop</span>
-                    <input type="file" name="file" id="file-input" required>
-                    <button type="button" class="upload-button" onclick="document.getElementById('file-input').click()">
-                        Upload File
-                    </button>
-                </div>
+@extends('layouts.app')
 
-                    @if ($errors->any())
-                        <div class="alert alert-error">
-                            <strong>Error{{ count($errors) > 1 ? 's' : '' }}:</strong>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-            </form>
+@section('title', 'YoPrint CSV Uploader')
 
-            <div class="table-container">
-                <table id="uploads-table">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>File Name</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($uploads as $upload)
-                            <tr>
-                                <td>
-                                    <div>{{ $upload->created_at->format('n-j-Y g:ia') }}</div>
-                                    <div class="time-info">({{ $upload->created_at->diffForHumans() }})</div>
-                                </td>
-                                <td>{{ $upload->original_filename }}</td>
-                                <td class="status-{{ strtolower($upload->status) }}">
-                                    {{ $upload->status }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+@section('content')
+    <form action="{{ route('uploads.store') }}" method="POST" enctype="multipart/form-data" id="upload-form">
+        @csrf
+        <div class="upload-area" id="upload-area">
+            <span class="upload-text">Select file/Drag and drop</span>
+            <input type="file" name="file" id="file-input" required>
+            <button type="button" class="upload-button" onclick="document.getElementById('file-input').click()">
+                Upload File
+            </button>
         </div>
-    </div>
 
+        @if ($errors->any())
+            <div class="alert alert-error">
+                <strong>Error{{ count($errors) > 1 ? 's' : '' }}:</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </form>
+
+    <div class="table-container">
+        <table id="uploads-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>File Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($uploads as $upload)
+                    <tr>
+                        <td>
+                            <div>{{ $upload->created_at->format('n-j-Y g:ia') }}</div>
+                            <div class="time-info">({{ $upload->created_at->diffForHumans() }})</div>
+                        </td>
+                        <td>{{ $upload->original_filename }}</td>
+                        <td class="status-{{ strtolower($upload->status) }}">
+                            {{ $upload->status }}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection
+
+@push('scripts')
     <script>
         // Handle file selection
         document.getElementById('file-input').addEventListener('change', function(e) {
@@ -150,5 +144,4 @@
             return `${days} day${days !== 1 ? 's' : ''} ago`;
         }
     </script>
-</body>
-</html>
+@endpush
