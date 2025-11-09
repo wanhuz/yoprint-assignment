@@ -8,16 +8,10 @@ use App\Jobs\ProcessCsvJob;
 
 class UploadController extends Controller
 {
-    public function index()
-    {
-        $uploads = Upload::latest()->get();
-
-        return view('uploads.index', compact('uploads'));
-    }
 
     public function store(Request $request)
     {
-        $request->validate(['file' => 'required|mimes:csv']);
+        $request->validate(['file' => 'required|mimes:csv']); // Only CSV is accepted
 
         $file = $request->file('file');
         $path = $file->store('uploads');
